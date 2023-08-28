@@ -566,6 +566,28 @@ object RawUpdater : GroupUpdater() {
                             }
                             proxies.add(bean)
                         }
+
+                        "wireguard" -> {
+                            // meta: https://wiki.metacubex.one/config/proxies/wg/
+                            // premium: https://dreamacro.github.io/clash/premium/userspace-wireguard.html
+
+                            val bean = WireGuardBean().apply {
+                                name = proxy["name"]?.toString()
+                                serverAddress = proxy["server"].toString()
+                                serverPort = proxy["port"].toString().toInt()
+
+                                localAddress = "${proxy["ip"]}/32\n${proxy["ipv6"]}/128"
+                                privateKey = proxy["private-key"].toString()
+
+                                peerPublicKey = proxy["public-key"].toString()
+                                peerPreSharedKey =
+                                    (proxy["pre-shared-key"] ?: proxy["preshared-key"])?.toString()
+
+                                mtu = proxy["mtu"]?.toString()?.toIntOrNull()
+                                reserved = proxy["reserved"]?.toString()
+                            }
+                            proxies.add(bean)
+                        }
                     }
                 }
 
