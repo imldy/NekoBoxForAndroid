@@ -19,7 +19,7 @@ import (
 	"github.com/matsuridayo/libneko/speedtest"
 	"github.com/matsuridayo/sing-box-extra/boxapi"
 
-	"github.com/sagernet/sing-box/common/dialer/conntrack"
+	"github.com/sagernet/sing-box/common/conntrack"
 	"github.com/sagernet/sing-box/option"
 	"github.com/sagernet/sing-box/outbound"
 	"github.com/sagernet/sing/service/pause"
@@ -117,10 +117,6 @@ func NewSingBoxInstance(config string) (b *BoxInstance, err error) {
 
 func (b *BoxInstance) Start() (err error) {
 	defer device.DeferPanicToError("box.Start", func(err_ error) { err = err_ })
-
-	if outdated != "" {
-		return errors.New(outdated)
-	}
 
 	if b.state == 0 {
 		b.state = 1

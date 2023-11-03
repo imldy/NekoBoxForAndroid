@@ -42,9 +42,6 @@ object Key {
 
     const val APPEND_HTTP_PROXY = "appendHttpProxy"
 
-    const val REQUIRE_TRANSPROXY = "requireTransproxy"
-    const val TRANSPROXY_MODE = "transproxyMode"
-    const val TRANSPROXY_PORT = "transproxyPort"
     const val CONNECTION_TEST_URL = "connectionTestURL"
 
     const val TCP_KEEP_ALIVE_INTERVAL = "tcpKeepAliveInterval"
@@ -78,6 +75,8 @@ object Key {
     const val SERVER_METHOD = "serverMethod"
     const val SERVER_PASSWORD1 = "serverPassword1"
 
+    const val PROTOCOL_VERSION = "protocolVersion"
+
     const val SERVER_PROTOCOL = "serverProtocol"
     const val SERVER_OBFS = "serverObfs"
 
@@ -95,6 +94,7 @@ object Key {
 
     const val SERVER_SECURITY_CATEGORY = "serverSecurityCategory"
     const val SERVER_TLS_CAMOUFLAGE_CATEGORY = "serverTlsCamouflageCategory"
+    const val SERVER_ECH_CATEORY = "serverECHCategory"
     const val SERVER_WS_CATEGORY = "serverWsCategory"
     const val SERVER_SS_CATEGORY = "serverSsCategory"
     const val SERVER_HEADERS = "serverHeaders"
@@ -105,19 +105,16 @@ object Key {
     const val SERVER_DOWNLOAD_SPEED = "serverDownloadSpeed"
     const val SERVER_STREAM_RECEIVE_WINDOW = "serverStreamReceiveWindow"
     const val SERVER_CONNECTION_RECEIVE_WINDOW = "serverConnectionReceiveWindow"
-    const val SERVER_MTU = "serverMTU"
     const val SERVER_DISABLE_MTU_DISCOVERY = "serverDisableMtuDiscovery"
     const val SERVER_HOP_INTERVAL = "hopInterval"
 
     const val SERVER_PRIVATE_KEY = "serverPrivateKey"
-    const val SERVER_LOCAL_ADDRESS = "serverLocalAddress"
     const val SERVER_INSECURE_CONCURRENCY = "serverInsecureConcurrency"
 
     const val SERVER_UDP_RELAY_MODE = "serverUDPRelayMode"
     const val SERVER_CONGESTION_CONTROLLER = "serverCongestionController"
     const val SERVER_DISABLE_SNI = "serverDisableSNI"
     const val SERVER_REDUCE_RTT = "serverReduceRTT"
-    const val SERVER_FAST_CONNECT = "serverFastConnect"
 
     const val ROUTE_NAME = "routeName"
     const val ROUTE_DOMAIN = "routeDomain"

@@ -14,7 +14,7 @@ public abstract class StandardV2RayBean extends AbstractBean {
 
     //////// End of VMess & VLESS ////////
 
-    // "V2Ray Transport" tcp/http/ws/quic/grpc
+    // "V2Ray Transport" tcp/http/ws/quic/grpc/httpUpgrade
     public String type;
 
     public String host;
@@ -48,6 +48,16 @@ public abstract class StandardV2RayBean extends AbstractBean {
 
     public String certificates;
 
+    // --------------------------------------- ech
+
+    public Boolean enableECH;
+
+    public Boolean enablePqSignature;
+
+    public Boolean disabledDRS;
+
+    public String echConfig;
+
     // --------------------------------------- //
 
     public Integer packetEncoding; // 1:packet 2:xudp
@@ -60,6 +70,8 @@ public abstract class StandardV2RayBean extends AbstractBean {
 
         if (JavaUtil.isNullOrBlank(type)) type = "tcp";
         else if ("h2".equals(type)) type = "http";
+
+        type = type.toLowerCase();
 
         if (JavaUtil.isNullOrBlank(host)) host = "";
         if (JavaUtil.isNullOrBlank(path)) path = "";
@@ -84,6 +96,11 @@ public abstract class StandardV2RayBean extends AbstractBean {
 
         if (realityPubKey == null) realityPubKey = "";
         if (realityShortId == null) realityShortId = "";
+
+        if (enableECH == null) enableECH = false;
+        if (JavaUtil.isNullOrBlank(echConfig)) echConfig = "";
+        if (enablePqSignature == null) enablePqSignature = false;
+        if (disabledDRS == null) disabledDRS = false;
     }
 
     @Override
@@ -117,6 +134,11 @@ public abstract class StandardV2RayBean extends AbstractBean {
             }
             case "grpc": {
                 output.writeString(path);
+            }
+            case "httpupgrade": {
+                output.writeString(host);
+                output.writeString(path);
+
             }
         }
 
@@ -163,6 +185,10 @@ public abstract class StandardV2RayBean extends AbstractBean {
                 break;
             }
             case "grpc": {
+                path = input.readString();
+            }
+            case "httpupgrade": {
+                host = input.readString();
                 path = input.readString();
             }
         }

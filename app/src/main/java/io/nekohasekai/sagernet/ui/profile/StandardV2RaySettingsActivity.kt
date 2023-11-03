@@ -44,6 +44,11 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
     private val realityPubKey = pbm.add(PreferenceBinding(Type.Text, "realityPubKey"))
     private val realityShortId = pbm.add(PreferenceBinding(Type.Text, "realityShortId"))
 
+    private val enableECH = pbm.add(PreferenceBinding(Type.Bool, "enableECH"))
+    private val enablePqSignature = pbm.add(PreferenceBinding(Type.Bool, "enablePqSignature"))
+    private val disabledDRS = pbm.add(PreferenceBinding(Type.Bool, "disabledDRS"))
+    private val echConfig = pbm.add(PreferenceBinding(Type.Text, "echConfig"))
+
     override fun StandardV2RayBean.init() {
         if (this is TrojanBean) {
             this@StandardV2RaySettingsActivity.uuid.fieldName = "password"
@@ -58,9 +63,10 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         pbm.fromCacheAll(this)
     }
 
-    lateinit var securityCategory: PreferenceCategory
-    lateinit var tlsCamouflageCategory: PreferenceCategory
-    lateinit var wsCategory: PreferenceCategory
+    private lateinit var securityCategory: PreferenceCategory
+    private lateinit var tlsCamouflageCategory: PreferenceCategory
+    private lateinit var wsCategory: PreferenceCategory
+    private lateinit var echCategory: PreferenceCategory
 
     override fun PreferenceFragmentCompat.createPreferences(
         savedInstanceState: Bundle?,
@@ -70,6 +76,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         pbm.setPreferenceFragment(this)
         securityCategory = findPreference(Key.SERVER_SECURITY_CATEGORY)!!
         tlsCamouflageCategory = findPreference(Key.SERVER_TLS_CAMOUFLAGE_CATEGORY)!!
+        echCategory = findPreference(Key.SERVER_ECH_CATEORY)!!
         wsCategory = findPreference(Key.SERVER_WS_CATEGORY)!!
 
 
@@ -127,16 +134,16 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         }
 
         security.preference.apply {
-            updateTle(security.readStringFromCache())
+            updateTls(security.readStringFromCache())
             this as SimpleMenuPreference
             setOnPreferenceChangeListener { _, newValue ->
-                updateTle(newValue as String)
+                updateTls(newValue as String)
                 true
             }
         }
     }
 
-    fun updateView(network: String) {
+    private fun updateView(network: String) {
         host.preference.isVisible = false
         path.preference.isVisible = false
         wsCategory.isVisible = false
@@ -146,6 +153,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
                 host.preference.setTitle(R.string.http_host)
                 path.preference.setTitle(R.string.http_path)
             }
+
             "http" -> {
                 host.preference.setTitle(R.string.http_host)
                 path.preference.setTitle(R.string.http_path)
@@ -159,17 +167,26 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
                 path.preference.isVisible = true
                 wsCategory.isVisible = true
             }
+
             "grpc" -> {
                 path.preference.setTitle(R.string.grpc_service_name)
+                path.preference.isVisible = true
+            }
+
+            "httpupgrade" -> {
+                host.preference.setTitle(R.string.http_upgrade_host)
+                path.preference.setTitle(R.string.http_upgrade_path)
+                host.preference.isVisible = true
                 path.preference.isVisible = true
             }
         }
     }
 
-    fun updateTle(tle: String) {
-        val isTLS = tle == "tls"
+    private fun updateTls(tls: String) {
+        val isTLS = "tls" in tls
         securityCategory.isVisible = isTLS
         tlsCamouflageCategory.isVisible = isTLS
+        echCategory.isVisible = isTLS
     }
 
 }

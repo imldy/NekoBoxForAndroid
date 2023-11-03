@@ -127,7 +127,7 @@
         <moe.matsuri.nb4a.ui.SimpleMenuPreference
             app:defaultValue="0"
             app:entries="@array/rules_dat_provider"
-            app:entryValues="@array/int_array_2"
+            app:entryValues="@array/int_array_3"
             app:icon="@drawable/ic_baseline_rule_folder_24"
             app:key="rulesProvider"
             app:title="@string/route_rules_provider"
@@ -160,7 +160,7 @@
 
     <PreferenceCategory app:title="@string/cag_dns">
         <EditTextPreference
-            app:defaultValue="https://8.8.8.8/dns-query"
+            app:defaultValue="https://dns.google/dns-query"
             app:icon="@drawable/ic_action_dns"
             app:key="remoteDns"
             app:title="@string/remote_dns"
@@ -220,21 +220,6 @@
             app:key="appendHttpProxy"
             app:summary="@string/append_http_proxy_sum"
             app:title="@string/append_http_proxy" />
-        <SwitchPreference
-            app:icon="@drawable/ic_baseline_transgender_24"
-            app:key="requireTransproxy"
-            app:title="@string/require_transproxy" />
-        <EditTextPreference
-            app:key="transproxyPort"
-            app:title="@string/port_transproxy"
-            app:useSimpleSummaryProvider="true" />
-        <moe.matsuri.nb4a.ui.SimpleMenuPreference
-            app:defaultValue="0"
-            app:entries="@array/transproxy_mode"
-            app:entryValues="@array/int_array_2"
-            app:key="transproxyMode"
-            app:title="@string/transproxy_mode"
-            app:useSimpleSummaryProvider="true" />
         <SwitchPreference
             app:icon="@drawable/ic_baseline_nat_24"
             app:key="allowAccess"

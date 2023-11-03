@@ -25,7 +25,6 @@ import io.nekohasekai.sagernet.fmt.trojan_go.buildTrojanGoConfig
 import io.nekohasekai.sagernet.fmt.trojan_go.toUri
 import io.nekohasekai.sagernet.fmt.tuic.TuicBean
 import io.nekohasekai.sagernet.fmt.tuic.toUri
-import io.nekohasekai.sagernet.fmt.tuic.buildTuicConfig
 import io.nekohasekai.sagernet.fmt.v2ray.*
 import io.nekohasekai.sagernet.fmt.wireguard.WireGuardBean
 import io.nekohasekai.sagernet.ktx.app
@@ -174,7 +173,7 @@ data class ProxyEntity(
         }
     }
 
-    fun displayType() = when (type) {
+    fun displayType(): String = when (type) {
         TYPE_SOCKS -> socksBean!!.protocolName()
         TYPE_HTTP -> if (httpBean!!.isTLS()) "HTTPS" else "HTTP"
         TYPE_SS -> "Shadowsocks"
@@ -182,7 +181,7 @@ data class ProxyEntity(
         TYPE_TROJAN -> "Trojan"
         TYPE_TROJAN_GO -> "Trojan-Go"
         TYPE_NAIVE -> "Naïve"
-        TYPE_HYSTERIA -> "Hysteria"
+        TYPE_HYSTERIA -> "Hysteria" + hysteriaBean!!.protocolVersion
         TYPE_SSH -> "SSH"
         TYPE_WG -> "WireGuard"
         TYPE_TUIC -> "TUIC"
@@ -278,12 +277,7 @@ data class ProxyEntity(
 
                             is HysteriaBean -> {
                                 append("\n\n")
-                                append(bean.buildHysteriaConfig(port, null))
-                            }
-
-                            is TuicBean -> {
-                                append("\n\n")
-                                append(bean.buildTuicConfig(port, null))
+                                append(bean.buildHysteria1Config(port, null))
                             }
                         }
                     }
@@ -297,7 +291,6 @@ data class ProxyEntity(
             TYPE_TROJAN_GO -> true
             TYPE_NAIVE -> true
             TYPE_HYSTERIA -> !hysteriaBean!!.canUseSingBox()
-            TYPE_TUIC -> tuicBean!!.protocolVersion == 4
             TYPE_NEKO -> true
             else -> false
         }

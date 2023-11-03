@@ -116,6 +116,15 @@ fun parseV2Ray(link: String): StandardV2RayBean {
                     bean.path = it
                 }
             }
+
+            "httpupgrade" -> {
+                url.queryParameter("path")?.let {
+                    bean.path = it
+                }
+                url.queryParameter("host")?.let {
+                    bean.host = it
+                }
+            }
         }
     } else {
         // also vless format
@@ -212,6 +221,15 @@ fun StandardV2RayBean.parseDuckSoft(url: HttpUrl) {
 
         "grpc" -> {
             url.queryParameter("serviceName")?.let {
+                path = it
+            }
+        }
+
+        "httpupgrade" -> {
+            url.queryParameter("host")?.let {
+                host = it
+            }
+            url.queryParameter("path")?.let {
                 path = it
             }
         }
@@ -436,7 +454,7 @@ fun StandardV2RayBean.toUriVMessVLESSTrojan(isTrojan: Boolean): String {
 
     when (type) {
         "tcp" -> {}
-        "ws", "http" -> {
+        "ws", "http", "httpupgrade" -> {
             if (host.isNotBlank()) {
                 builder.addQueryParameter("host", host)
             }
@@ -564,6 +582,14 @@ fun buildSingBoxOutboundStreamSettings(bean: StandardV2RayBean): V2RayTransportO
                 service_name = bean.path
             }
         }
+
+        "httpupgrade" -> {
+            return V2RayTransportOptions_HTTPUpgradeOptions().apply {
+                type = "httpupgrade"
+                host = bean.host
+                path = bean.path
+            }
+        }
     }
 
 //    if (needKeepAliveInterval) {
@@ -583,18 +609,26 @@ fun buildSingBoxOutboundTLS(bean: StandardV2RayBean): OutboundTLSOptions? {
         if (bean.sni.isNotBlank()) server_name = bean.sni
         if (bean.alpn.isNotBlank()) alpn = bean.alpn.listByLineOrComma()
         if (bean.certificates.isNotBlank()) certificate = bean.certificates
-        if (bean.utlsFingerprint.isNotBlank()) {
-            utls = OutboundUTLSOptions().apply {
-                enabled = true
-                fingerprint = bean.utlsFingerprint
-            }
-        }
+        var fp = bean.utlsFingerprint
         if (bean.realityPubKey.isNotBlank()) {
             reality = OutboundRealityOptions().apply {
                 enabled = true
                 public_key = bean.realityPubKey
                 short_id = bean.realityShortId
             }
+            if (fp.isNullOrBlank()) fp = "chrome"
+        }
+        if (fp.isNotBlank()) {
+            utls = OutboundUTLSOptions().apply {
+                enabled = true
+                fingerprint = fp
+            }
+        }
+        if (bean.enableECH) {
+            ech.enabled = true
+            ech.pq_signature_schemes_enabled = bean.enablePqSignature
+            ech.dynamic_record_sizing_disabled = bean.disabledDRS
+            ech.config = bean.echConfig.lines()
         }
     }
 }
